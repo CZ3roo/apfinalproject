@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct newAPCSPPROJECTApp: App {
+    let menuManager = MenuManager()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(menuManager)
         }
     }
 }
