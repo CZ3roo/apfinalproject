@@ -2,135 +2,58 @@
 //  ContentView.swift
 //  newAPCSPPROJECT
 //
-//  Created by Christopher Zhao24 on 3/26/23.
 //
 
 import SwiftUI
 
-
-struct Ocean: Identifiable {
-    var name: String
-    var id = UUID()
-}
-
+///This view display the list of menu items, on click of the food item, user is brought to the detailView where food detail information will be display. User can also click on 'check out' to go to the finishing view.
 struct ContentView: View {
-    
-    @State private var showPopUp: Bool = false
-    
-    @State private var coupon = " "
     @StateObject var menuManager = MenuManager()
-
     @State private var singleSelection: UUID?
     
     var body: some View {
-        VStack{
-            NavigationView {
+        NavigationView {
+            VStack {
+                // Menu items are grouped by food categories in the menu list
                 List(selection: $singleSelection) {
                     ForEach(foodCategories) { category in
-                        Section(header: Text(" \(category.name) ")
+                        Section(header:
+                            Text(" \(category.name) ")
+                                .font(.title3)
+                                .foregroundColor(.orange)
+                                .padding(.top, 10) // Adjust the top padding here
                             .bold()
-                            .foregroundColor(.orange)
                         ) {
                             ForEach(category.food) { food in
-                                NavigationLink(destination: DetailView(foodItem: food)){
-                                    HStack{
+                                // Bring user to detail screen where food detail information is displayed
+                                NavigationLink(destination: DetailView(foodItem: food)) {
+                                    HStack {
                                         Text(food.name)
-                                        
-                                       // Spacer()
-                                        
+                                        Spacer()
                                         Text("Price: \(String(format: "%.2f", food.price))")
                                     }
                                 }
                             }
                         }
                     }
-
-                    NavigationLink(destination: FinishingView(totalCost: 0)) {
-                        VStack{
-                            HStack{
-                                Spacer()
-                                ZStack{
-                                    RoundedRectangle(cornerRadius: 25)
-                                        .contentShape(Rectangle())
-                                        .frame(width: 140, height: 42)
-                                        .foregroundColor(.black.opacity(0.1))
-                                    
-                                    Text("Checkout")
-                                        .foregroundColor(.orange)
-                                        .font(.custom(
-                                            "SF Pro",
-                                            fixedSize: 22))
-                                        .contentShape(Rectangle())
-                                        .frame(width: 100, height: 25)
-                                        .bold()
-                                    
-                                }
-                            }
-                        }
-                        Spacer()
-                    }
-
                 }
+                .listStyle(GroupedListStyle())
                 .navigationTitle("Restaurant Menu")
-                .frame(width: 400, height: 665)
+                .frame(width: 400, height: 625)
+                .foregroundColor(.black)
                 
-            }
-            /*
-            HStack{
-                Text("Total: notyet")
-                    .foregroundColor(.black)
+                Spacer()
                 
-               // Spacer()
-                    .frame(width: 200)
-                
-                
-                // MAKE THE BUTTON WORK
-                NavigationView {
-                    NavigationLink(destination: FinishingView(totalCost: 0)) {
-                        ZStack{
-                            RoundedRectangle(cornerRadius: 25)
-                                .contentShape(Rectangle())
-                                .frame(width: 120, height: 42)
-                            
-                            Text("Checkout")
-                                .foregroundColor(.green)
-                                .contentShape(Rectangle())
-                                .frame(width: 80, height: 25)
-                            
-                        }
-                    }
+                // Bring user to checkout screen
+                NavigationLink(destination: FinishingView(totalCost: 0)) {
+                    MenuButton(buttonText: "Check out", length: 350)
                 }
+                .padding(.bottom, 20) // Adjust the padding here
             }
-            .frame(height: 50)
-            */
-            /*
-            ZStack {
-                NavigationView {
-                    ZStack(alignment: .center) {
-                        Color(#colorLiteral(red: 0.737254902, green: 0.1294117647, blue: 0.2941176471, alpha: 1)).ignoresSafeArea()
-                        Button(action: {
-                            withAnimation(.linear(duration: 0.3)) {
-                                showPopUp.toggle()
-                            }
-                        }, label: {
-                            Text("Show PopUp Window")
-                        })
-                        .padding()
-                        .background(Color(#colorLiteral(red: 0.6196078431, green: 0.1098039216, blue: 0.2509803922, alpha: 1)))
-                    }
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationTitle("PopUpWindowSwiftUIExample")
-                    .foregroundColor(Color.white)
-                }
-                PopupView(title: "Coupon", message: "COUPON", buttonText: "Coupon(ok)", show: $showPopUp)
-            }
-            */
-
+            .accentColor(.orange)
         }
-        
-        
+        .navigationBarBackButtonHidden(true)
     }
-    
 }
 
 

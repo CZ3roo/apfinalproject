@@ -2,145 +2,97 @@
 //  DetailView.swift
 //  newAPCSPPROJECT
 //
-//  Created by Christopher Zhao24 on 3/27/23.
+//  
 //
 
 import SwiftUI
 
-
+///this view displays detailed food information and allows user to select number of orders of the food item they wish to order.
 struct DetailView: View {
     @EnvironmentObject var menuManager: MenuManager
     @Environment(\.dismiss) var dismiss
-   
-    @State var foodItem: Food = Food(name: "Example", price: 100000, numOrdered: 1, calories: -1, image: "salmonnigiri")
-    var bodyText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis"
-    
-    
-    
-    
+    @State var foodItem = Food()
     
     var body: some View {
-        NavigationView{
-            VStack{
-                
-                //
-               
-                
-                //
-                ZStack{
+        NavigationView {
+            VStack {
+                ZStack {
                     RoundedRectangle(cornerRadius: 25)
                         .frame(width: 380, height: 90)
-                        .foregroundColor(Color.brown.opacity(0.55))
+                        .foregroundColor(.clear)
+                        .background(
+                            RoundedRectangle(cornerRadius: 25)
+                                .fill(LinearGradient(
+                                    gradient: Gradient(colors: [Color.red, Color.orange]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ))
+                        )
+                    
                     Text(foodItem.name)
-                        .frame(alignment: .center)
-                        .font(.custom(
-                            "SF Pro",
-                            fixedSize: 32))
+                        .font(.system(size: 30, weight: .bold))
+                        .foregroundColor(.white)
                 }
+
                 Image(foodItem.image)
                     .resizable()
-                    .frame(width: 400, height: 250)
+                    .frame(width: 360, height: 225)
                     .scaledToFit()
-                HStack{
-                    VStack{
-                        
-                        
-                        /*
-                        NavigationView{
-                            NavigationLink(destination: FinishingView(totalCost: 0)) {
-                                VStack{
-                                    HStack{
-                                        Spacer()
-                                        ZStack{
-                                            RoundedRectangle(cornerRadius: 25)
-                                                .contentShape(Rectangle())
-                                                .frame(width: 140, height: 42)
-                                                .foregroundColor(.black.opacity(0.1))
-                                            
-                                            Text("Checkout")
-                                                .foregroundColor(.orange)
-                                                .font(.custom(
-                                                    "SF Pro",
-                                                    fixedSize: 22))
-                                                .contentShape(Rectangle())
-                                                .frame(width: 100, height: 25)
-                                                .bold()
-                                            
-                                        }
-                                    }
-                                }
-                                Spacer()
-                            }
-                        }
-                        */
-                        
-                        
-                        VStack{
-                            Text("$\(String(format: "%.2f", foodItem.price))")
-                            
-                                .font(.custom(
-                                    "SF Pro",
-                                    fixedSize: 30))
-                                .foregroundColor(.green)
-                                .frame(alignment: .leading)
-                            Spacer()
-                                .frame(height: 2)
-                            Text(String(foodItem.calories) + " cals")
-                            
-                                .font(.custom(
-                                    "SF Pro",
-                                    fixedSize: 20))
-                                .foregroundColor(.black)
-                                .frame(alignment: .leading)
-                        }
-                        
-                        
+                    .cornerRadius(25)
+            
+    
+                VStack{
+                    Text("$\(String(format: "%.2f", foodItem.price))")
+                        .font(.custom(
+                            "SF Pro",
+                            fixedSize: 40))
+                        .foregroundColor(.green)
+                        .frame(alignment: .leading)
+                    Spacer()
+                        .frame(height: 2)
+                    Text(String(foodItem.calories) + " cals")
+                        .font(.custom(
+                            "SF Pro",
+                            fixedSize: 30))
+                        .foregroundColor(.black)
+                        .frame(alignment: .leading)
                     }
-                    //  .position(x: 50, y: 30)
-                }
+        
+             
                 Spacer()
                     .frame(height: 10)
                 
-                Text(bodyText)
-                    .font(.custom("SF Pro", fixedSize: 15))
+                //display food description, allows text to expand vertically by using fixedSize modifier
+                Text(foodItem.description)
+                    .font(.custom("SF Pro", fixedSize: 17))
                     .frame(width: 360)
+                    .fixedSize(horizontal: false, vertical: true)
+                
                 Spacer()
                     .frame(height: 24)
-                
+                //use stepper to allow users to select number of orders they want
                 Stepper("\(foodItem.numOrdered.formatted()) pieces", value: $foodItem.numOrdered, in: 1...12, step: 1)
                     .frame(width: 200)
                 
                 Spacer()
                     .frame(height: 80)
-                ZStack{
-                    /*
-                     RoundedRectangle(cornerRadius: 25, style: .continuous)
-                     .fill(.black)
-                     .frame(width: 200, height: 55)
-                     */
-                    Button(action: {
+                
+                MenuButton(buttonText: "Add to Order", length: 400)
+                    .onTapGesture{
                         menuManager.addToOrder(food: foodItem)
                         dismiss()
-                    }) {
-                        Text("Add to Order")
-                            .font(.custom(
-                                "SF Pro",
-                                fixedSize: 20))
-                            .padding()
-                        
-                        //  .background(.white)
                     }
-                    .foregroundColor(.orange)
-                    .background(.black.opacity(0.69)) // 3
-                    .cornerRadius(18)
-                }
+                .padding(.horizontal)
+                
             }
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
 
+
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(foodItem: Food(name: "Thing", price: 99, numOrdered: 2, calories: 12, image: "seaweedsalad"))
+        DetailView(foodItem: Food(name: "Thing", price: 99, numOrdered: 2, calories: 12, image: "seaweedsalad4",description: "food description goes here"))
     }
 }

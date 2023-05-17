@@ -51,10 +51,4 @@ struct PopupView: View {
             }
         }
     }
-/*
-struct PopupView_Previews: PreviewProvider {
-    static var previews: some View {
-        PopupView(title: "hi", message:"greetings", buttonText: "aloha", show: true)
-    }
-}
-*/
+
